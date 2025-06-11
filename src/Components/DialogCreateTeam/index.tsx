@@ -25,6 +25,8 @@ export const DialogCreateTeam = () => {
     }
   }, [audio, selectedMusic, setAudio]) // Reage apenas a mudanças em `selectedMusic`
 
+  console.log(buttonState)
+
   return (
     <DialogContent className="min-w-[80%] h-[80vh] flex items-center justify-center bg-[#1f1e2b] text-white border-1 border-neutral-600">
       {/* <DialogHeader>
