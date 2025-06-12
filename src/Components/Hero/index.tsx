@@ -21,10 +21,10 @@ export const Hero = () => {
   const { ListPerson, showAnimation, firstPlaces } = useUser()
 
   return (
-    <section className="w-full h-full rounded-2xl flex justify-center items-start gap-7 px-80">
+    <section className="w-full h-full flex justify-center items-start gap-8 px-6 md:px-12 xl:px-20 2xl:px-32">
       {/* Fogos de artifício */}
       {showAnimation.state && (
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-40">
           <div className="firework firework1"></div>
           <div className="firework firework2"></div>
           <div className="firework firework3"></div>
@@ -78,53 +78,49 @@ export const Hero = () => {
         )}
       </AnimatePresence>
 
-
-      <div className="w-[52%] h-[35rem] xl:h-[65rem] bg-[#1f1e2b] 
-        rounded-4xl bg-center bg-cover relative perspective-[1000px]" style={{ backgroundImage: `url(${BgList})` }}>
-        <div className="w-full relative mt-[22rem] xl:mt-[45%] flex items-center 
-          transform translate-z-[15rem] translate-x-[9.6rem] xl:translate-z-[-40rem] xl:translate-x-[5rem]">
-
-          <div className=" flex xl:-ml-18 flex-col items-center absolute -left-32 xl:-left-86">
-            <div className="w-21 h-34 xl:w-[33rem] xl:h-[53rem] bg-center bg-cover flex flex-col items-center gap-3 justify-center animate-floatSecound" style={{ backgroundImage: `url(${ImageshieldTwo})` }}>
-              <img src={firstPlaces[1]?.urlImage} className="octagon w-14 h-14 xl:w-56 xl:h-56" alt="" />
-              {
-                <p className="text-white text-xl xl:text-3xl font-semibold">{firstPlaces[1]?.name}</p>
-              }
-            </div>
-            <div className="absolute bottom-0 w-[90%] h-[26%] rounded-full opacity-50 bg-white blur-md animate-vapor"></div>
-            <img className="w-[8rem]  xl:w-[35rem]" src={PodionTwo} alt="" />
+      {/* Pódio */}
+      <div className="w-full xl:w-[55%] min-h-[35rem] bg-[#1f1e2b] rounded-3xl flex items-center justify-center gap-8 relative bg-cover bg-center" style={{ backgroundImage: `url(${BgList})` }}>
+        {/* Elementos posicionados responsivamente com flex + translate-x removido */}
+        {/* 2º Lugar – z-10 */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div
+            className="w-24 h-40 xl:w-40 xl:h-64 bg-center bg-cover animate-floatSecound flex flex-col items-center justify-center"
+            style={{ backgroundImage: `url(${ImageshieldTwo})` }}
+          >
+            <img src={firstPlaces[1]?.urlImage} className="octagon w-16 h-16 xl:w-28 xl:h-28 mx-auto mt-2" />
+            <p className="text-white text-sm xl:text-xl text-center font-semibold mt-2">{firstPlaces[1]?.name}</p>
           </div>
-
-          <div className=" flex flex-col items-center absolute left-[6rem] xl:left-0 xl:right-[-75.2rem]">
-            <div className="w-21 h-34 xl:w-[33rem] xl:h-[53rem] bg-center bg-cover flex flex-col items-center 
-              justify-center gap-3  animate-floatThree" style={{ backgroundImage: `url(${ImageshieldThree})` }}>
-              <img src={firstPlaces[2]?.urlImage} className="octagon w-14 h-14 xl:w-56 xl:h-56" alt="" />
-              <p className="text-white text-xl xl:text-3xl font-semibold">{firstPlaces[2]?.name}</p>
-            </div>
-            <div className="absolute bottom-0  w-[26%] h-[26%] rounded-full opacity-50 bg-white blur-md animate-vapor"></div>
-            <img className="w-[8rem]  xl:w-[40rem]" src={PodionThree} alt="" />
-          </div>
+          <img src={PodionTwo} className="w-20 xl:w-40 mt-[-0.5rem]" />
         </div>
 
-        {/* 1º Lugar - Centro e mais na frente */}
-        <div className="absolute bottom-2 flex flex-col items-center text-white 
-          transform translate-z-[-4.5rem] translate-x-[50.3%] xl:translate-z-[-4.8rem] xl:translate-x-[96.6%]">
-          <div className=" w-36 h-56 xl:w-[31rem] xl:h-[50rem] flex flex-col items-center justify-center 
-            gap-3 bg-center bg-cover animate-float" style={{ backgroundImage: `url(${ImageshieldOne})` }}>
-            <img src={firstPlaces[0]?.urlImage} className="octagon w-19 h-19 xl:w-56 xl:h-56" alt="" />
-            <p className="text-white text-xl xl:text-3xl font-semibold">
-              {firstPlaces[0]?.name}
-            </p>
+        {/* 1º Lugar – z-30 (em destaque) */}
+        <div className="relative z-30 flex flex-col items-center">
+          <div
+            className="w-28 h-48 xl:w-48 xl:h-76 bg-center bg-cover animate-float flex flex-col items-center justify-center"
+            style={{ backgroundImage: `url(${ImageshieldOne})` }}
+          >
+            <img src={firstPlaces[0]?.urlImage} className="octagon w-20 h-20 xl:w-32 xl:h-32 mx-auto mt-2" />
+            <p className="text-white text-base xl:text-2xl text-center font-bold mt-2">{firstPlaces[0]?.name}</p>
           </div>
-          <div className="absolute bottom-8 w-[90%] h-[26%] rounded-full opacity-50 bg-white blur-md animate-vapor"></div>
-          <img className=" w-[13rem] xl:w-[30rem]" src={PodionOne} alt="" />
+          <img src={PodionOne} className="w-24 xl:w-52 mt-[-0.5rem]" />
         </div>
 
-        {/* 3º Lugar - Direita e mais no fundo */}
+        {/* 3º Lugar – z-10 */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div
+            className="w-24 h-40 xl:w-40 xl:h-64 bg-center bg-cover animate-floatThree flex flex-col items-center justify-center"
+            style={{ backgroundImage: `url(${ImageshieldThree})` }}
+          >
+            <img src={firstPlaces[2]?.urlImage} className="octagon w-16 h-16 xl:w-28 xl:h-28 mx-auto mt-2" />
+            <p className="text-white text-sm xl:text-xl text-center font-semibold mt-2">{firstPlaces[2]?.name}</p>
+          </div>
+          <img src={PodionThree} className="w-20 xl:w-40 mt-[-0.5rem]" />
+        </div>
 
       </div>
 
-      <div className="w-[45%] h-[35rem] xl:h-[65rem] p-5 xl:p-9 bg-[#1f1e2b] grid md:grid-cols-2 gap-5 xl:gap-7 items-center rounded-4xl bg-cover bg-center" style={{ backgroundImage: `url(${BgList})` }}>
+      {/* Lista de Pessoas */}
+      <div className="w-[45%] min-h-[35rem] p-5 xl:p-9 bg-[#1f1e2b] grid md:grid-cols-2 gap-5 xl:gap-7 items-center rounded-4xl bg-cover bg-center" style={{ backgroundImage: `url(${BgList})` }}>
         <AnimatePresence>
           {ListPerson
             .sort((a, b) => Number(b.vendas) - Number(a.vendas))
@@ -150,12 +146,12 @@ export const Hero = () => {
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1.2 }}
                         transition={{ duration: 0.5, repeat: 2, repeatType: "reverse" }}
-                        className=" w-9 xl:w-26"
+                        className=" w-9 xl:w-20"
                       />
 
                       <div className="flex flex-col items-start justify-center">
-                        <p className="xl:text-3xl text-neutral-200 font-semibold">{list.name}</p>
-                        <p className="text-[0.765rem] xl:text-2xl font-semibold text-neutral-300">{list.vendas}</p>
+                        <p className="xl:text-2xl text-neutral-200 font-semibold">{list.name}</p>
+                        <p className="text-[0.765rem] xl:text-xl font-semibold text-neutral-300">{list.vendas} Pontos</p>
                       </div>
                     </div>
                   )}
@@ -178,5 +174,6 @@ export const Hero = () => {
         </AnimatePresence>
       </div>
     </section>
+
   );
 };
