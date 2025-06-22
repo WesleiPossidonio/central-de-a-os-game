@@ -1,5 +1,6 @@
-import { Hero } from '@/Components'
+
 import { DialogCreatePerson } from '@/Components/DialogCreatePerson'
+import { Hero } from '@/Pages'
 import { Routes, Route } from 'react-router-dom'
 
 

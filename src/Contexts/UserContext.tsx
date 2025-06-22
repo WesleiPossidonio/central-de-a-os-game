@@ -1,3 +1,4 @@
+import api from "@/services/api";
 import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 
 interface CreateTeamProps {
@@ -17,9 +18,10 @@ interface showAnimationProps {
 }
 
 export interface listPersonProps {
-  id?: number;
-  name: string;
-  vendas: string;
+  posicao: number;
+  id_vendedor?: number;
+  vendedor: string;
+  total_vendas: number;
   urlImage: string;
 }
 
@@ -59,16 +61,19 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const prevListPersonSize = useRef(0);
 
   useEffect(() => {
-    const loadLocalStorageData = () => {
+    const loadLocalStorageData = async () => {
       const savedMusic = localStorage.getItem("selectedMusic");
       setSelectedMusic(savedMusic || "/music/music6.wav");
       setAudio(new Audio(savedMusic || "/music/music6.wav"));
 
       try {
         const personList: listPersonProps[] = JSON.parse(localStorage.getItem("listPerson") || "[]");
-        const firstPlacesList: listPersonProps[] = JSON.parse(localStorage.getItem("firstPlaces") || "[]");
+        const response = await api.get('');
 
-        const sortedFirstPlaces = firstPlacesList.sort((a, b) => Number(b.vendas) - Number(a.vendas)).slice(0, 3);
+        const { data } = response
+
+        console.log(data)
+        const sortedFirstPlaces = data.sort((a: listPersonProps, b: listPersonProps) => Number(b.total_vendas) - Number(a.total_vendas)).slice(0, 3);
 
         setListPerson(personList);
         setFirstPlaces(sortedFirstPlaces);
@@ -94,39 +99,9 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   }, []);
 
 
-
-
-  // useEffect(() => {
-  //   const savedMusic = localStorage.getItem("selectedMusic");
-  //   if (savedMusic) {
-  //     setSelectedMusic(savedMusic);
-  //     setAudio(new Audio(savedMusic));
-  //   } else {
-  //     setAudio(new Audio("/music/music6.wav")); // Música padrão
-  //   }
-
-  //   try {
-  //     const getListPerson = localStorage.getItem("listPerson");
-  //     const getfirstListPerson = localStorage.getItem("firstPlaces");
-  //     const personList: listPersonProps[] = JSON.parse(getListPerson || "[]");
-  //     const firstPlacesList: listPersonProps[] = JSON.parse(getfirstListPerson || "[]");
-  //     const firstPlaces = firstPlacesList.sort((a, b) => Number(b.vendas) - Number(a.vendas)) // Ordena por vendas
-  //       .slice(0, 3);
-  //     setFirstPlaces(firstPlaces)
-
-  //     setListPerson(personList);
-  //     prevListPersonSize.current = personList.length;
-
-
-  //   } catch (error) {
-  //     console.error("Erro ao carregar listPerson do localStorage:", error);
-  //   }
-  // }, [ListPerson]);
-
-
   useEffect(() => {
     const newFirstPlaces = [...ListPerson]
-      .sort((a, b) => Number(b.vendas) - Number(a.vendas)) // Ordena por vendas
+      .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas)) // Ordena por vendas
       .slice(0, 3);
 
     // Atualiza o estado uma única vez antes das verificações
@@ -135,7 +110,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     }
 
     // Primeiro Lugar
-    if (firstPlaces[0]?.id !== newFirstPlaces[0]?.id) {
+    if (firstPlaces[0]?.id_vendedor !== newFirstPlaces[0]?.id_vendedor) {
       const audioPodio = new Audio("music/music10.wav");
       setShowAnimation({ state: true, typePlaces: "first" });
       localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces))
@@ -149,7 +124,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     }
 
     // Segundo Lugar
-    else if (firstPlaces[1]?.id !== newFirstPlaces[1]?.id) {
+    else if (firstPlaces[1]?.id_vendedor !== newFirstPlaces[1]?.id_vendedor) {
       const audioPodio = new Audio("music/music7.wav");
       setShowAnimation({ state: true, typePlaces: "second" });
       localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces))
@@ -163,7 +138,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     }
 
     // Terceiro Lugar
-    else if (firstPlaces[2]?.id !== newFirstPlaces[2]?.id) {
+    else if (firstPlaces[2]?.id_vendedor !== newFirstPlaces[2]?.id_vendedor) {
       const audioPodio = new Audio("music/music8.wav");
       setShowAnimation({ state: true, typePlaces: "third" });
       localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces))
@@ -179,7 +154,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     // Se o tamanho da lista aumentou, toca a música
     else if (ListPerson.length > prevListPersonSize.current) {
       prevListPersonSize.current = ListPerson.length; // Atualiza a referência do tamanho anterior
-      if (audio && firstPlaces[0]?.id === newFirstPlaces[0]?.id) {
+      if (audio && firstPlaces[0]?.id_vendedor === newFirstPlaces[0]?.id_vendedor) {
         audio.currentTime = 0;
         audio.play();
       }
@@ -208,7 +183,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
   const handleUpdatePerson = async (data: listPersonProps) => {
 
-    const newList = ListPerson.filter(list => list.id !== data.id)
+    const newList = ListPerson.filter(list => list.id_vendedor !== data.id_vendedor)
 
     const listUpdated = [
       ...newList,

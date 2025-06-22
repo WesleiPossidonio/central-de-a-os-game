@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppProvider>
-        <main className="w-full h-auto flex flex-col items-center justify-center gap-8 min-h-svh bg-cover bg-center p-8" style={{ backgroundImage: `url(${BgImage})` }}>
+        <main className="w-full h-auto flex flex-col items-center justify-center gap-8 min-h-svh bg-cover bg-center p-4 md:p-8" style={{ backgroundImage: `url(${BgImage})` }}>
           <Header />
           <Router />
         </main>
