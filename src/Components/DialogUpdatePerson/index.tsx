@@ -12,8 +12,8 @@ interface DialogProps {
 }
 
 const createPersonSchema = zod.object({
-  name: zod.string().min(3, 'Digite um nome Valido!'),
-  vendas: zod.string().min(1, 'Digite um valor Valido!'),
+  vendedor: zod.string().min(3, 'Digite um nome Valido!'),
+  total_vendas: zod.string().min(1, 'Digite um valor Valido!'),
 })
 
 export type createFormInputs = zod.infer<typeof createPersonSchema>
@@ -31,20 +31,21 @@ export const DialogUpdatePerson = (personId: DialogProps) => {
   })
 
 
-  const personData = ListPerson.find(person => person.id === personId.personId)
+  const personData = ListPerson.find(person => person.id_vendedor === personId.personId)
 
   const handleSubmitPerson = (data: createFormInputs, event?: BaseSyntheticEvent) => {
     event?.preventDefault()
 
-    if (personData && personData.id) {
-      const { name, vendas } = data
+    if (personData && personData.id_vendedor) {
+      const { vendedor, total_vendas } = data
 
-      const numbers = Number(vendas) + Number(personData.vendas)
+      const numbers = Number(total_vendas) + Number(personData.total_vendas)
 
       const newData = {
-        id: personData.id,
-        name,
-        vendas: String(numbers),
+        posicao: personData.posicao,
+        id_vendedor: personData.id_vendedor,
+        vendedor,
+        total_vendas: numbers,
         urlImage: personData.urlImage
       }
       handleUpdatePerson(newData)
@@ -63,13 +64,13 @@ export const DialogUpdatePerson = (personId: DialogProps) => {
         <form className="w-full flex flex-col items-center justify-center gap-4" onSubmit={handleSubmit(handleSubmitPerson)}>
           <label className="w-full" htmlFor="name">
             Nome do Colaborador
-            <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Nome" id="name"  {...register('name')} defaultValue={personData?.name} disabled />
+            <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Nome" id="name"  {...register('vendedor')} defaultValue={personData?.vendedor} disabled />
           </label>
           <label className="w-full" htmlFor="name">
             Adicionar Vendas
-            <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Valor da Ultima Venda" id="Vendas" {...register('vendas')} />
+            <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Valor da Ultima Venda" id="Vendas" {...register('total_vendas')} />
           </label>
-          <p className="text-white">{errors?.vendas?.message}</p>
+          <p className="text-white">{errors?.total_vendas?.message}</p>
 
           <Button type="submit" className='py-5.5 px-4 self-start text-md bg-neutral-500 hover:bg-neutral-600 transition duration-75 ease-in cursor-pointer'>
             Cadastrar Time
