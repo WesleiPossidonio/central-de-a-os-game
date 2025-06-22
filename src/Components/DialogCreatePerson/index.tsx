@@ -9,8 +9,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { DialogUpdatePerson } from "../DialogUpdatePerson"
 
 const createPersonSchema = zod.object({
-  name: zod.string().min(3, 'Digite um nome Valido!'),
-  vendas: zod.string().min(1, 'Digite um valor Valido!'),
+  vendedor: zod.string().min(3, 'Digite um nome Valido!'),
+  total_vendas: zod.number().min(1, 'Digite um valor Valido!'),
   urlImage: zod.string().url('Digite uma url Valida!')
 })
 
@@ -34,7 +34,8 @@ export const DialogCreatePerson = () => {
     event?.preventDefault()
     const dataPerson = {
       ...data,
-      id: ListPerson.length + 1
+      id_vendedor: ListPerson.length + 1,
+      posicao: ListPerson.length + 1,
     }
     handleCreatePerson(dataPerson)
     reset()
@@ -47,7 +48,7 @@ export const DialogCreatePerson = () => {
     setStateSearch(name);
   }
 
-  const filterList = ListPerson.filter(list => list.name === stateSearch)
+  const filterList = ListPerson.filter(list => list.vendedor === stateSearch)
 
   return (
     <section className="w-full flex items-center justify-center  gap-6 text-white">
@@ -55,13 +56,13 @@ export const DialogCreatePerson = () => {
       <form className="w-1/2 flex flex-col items-center justify-center gap-4 p-10 bg-[#1f1e2b] border-neutral-600 border-1 rounded-lg" onSubmit={handleSubmit(handleSubmitPerson)}>
         <label className="w-full" htmlFor="name">
           Nome do Colaborador
-          <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Nome" id="name" {...register('name')} />
+          <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Nome" id="name" {...register('vendedor')} />
         </label>
         <label className="w-full" htmlFor="name">
           Adicionar Vendas
-          <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Valor da Ultima Venda" id="Vendas" {...register('vendas')} />
+          <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Valor da Ultima Venda" id="Vendas" {...register('total_vendas')} />
         </label>
-        <p className="text-white">{errors?.vendas?.message}</p>
+        <p className="text-white">{errors?.total_vendas?.message}</p>
         <label className="w-full" htmlFor="name">
           Adicionar Url da Imagem
           <Input className="w-full mt-1 px-2 py-4 text-md" placeholder="Adicionarurl de uma foto" id="imagem" {...register('urlImage')} />
@@ -86,11 +87,11 @@ export const DialogCreatePerson = () => {
             filterList.map(list => {
               return (
                 <Dialog>
-                  <DialogTrigger asChild key={list.id} className="w-full min-h-[5rem] px-4 py-5 xl:py-8 flex items-center justify-start gap-6 rounded-2xl bg-[#5f658a] shadow-lg ">
-                    <p className="text-white font-semibold text-xl">Name: {list.name}</p>
+                  <DialogTrigger asChild key={list.id_vendedor} className="w-full min-h-[5rem] px-4 py-5 xl:py-8 flex items-center justify-start gap-6 rounded-2xl bg-[#5f658a] shadow-lg ">
+                    <p className="text-white font-semibold text-xl">Name: {list.vendedor}</p>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
-                    <DialogUpdatePerson personId={list.id !== undefined ? list.id : 2} />
+                    <DialogUpdatePerson personId={list.id_vendedor !== undefined ? list.id_vendedor : 2} />
                   </DialogContent>
                 </Dialog>
               )
