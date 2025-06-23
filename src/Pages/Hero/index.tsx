@@ -135,7 +135,7 @@ export const Hero = () => {
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1.2 }}
                         transition={{ duration: 0.5, repeat: 2, repeatType: "reverse" }}
-                        className="w-7 h-10 sm:w-9 xl:w-10"
+                        className="w-7 h-7 sm:w-9 sm:h-9 xl:w-10"
                       />
                       <div className="flex flex-col items-start justify-center">
                         <p className="text-base sm:text-xl xl:text-2xl text-neutral-200 font-semibold">{list.vendedor}</p>
