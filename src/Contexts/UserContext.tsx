@@ -1,4 +1,5 @@
-import api from "@/services/api";
+
+import axios from "axios";
 import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 
 interface CreateTeamProps {
@@ -60,26 +61,41 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
   const prevListPersonSize = useRef(0);
 
+  const linkApi = 'https://criardash.com/api/ranking.php?token=sDUEqMJPPV2kVh9Rof6CqhdG'
+
   useEffect(() => {
     const loadLocalStorageData = async () => {
-      const savedMusic = localStorage.getItem("selectedMusic");
-      setSelectedMusic(savedMusic || "/music/music6.wav");
-      setAudio(new Audio(savedMusic || "/music/music6.wav"));
+      const savedMusic = localStorage.getItem("selectedMusic") || "/music/music6.wav";
+      setSelectedMusic(savedMusic);
+      setAudio(new Audio(savedMusic));
 
       try {
-        const personList: listPersonProps[] = JSON.parse(localStorage.getItem("listPerson") || "[]");
-        const response = await api.get('');
+        const response = await axios.get(linkApi);
+        const data: listPersonProps[] = response.data;
 
-        const { data } = response
+        const sortedFirstPlaces = data
+          .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas))
+          .slice(0, 3);
 
-        console.log(data)
-        const sortedFirstPlaces = data.sort((a: listPersonProps, b: listPersonProps) => Number(b.total_vendas) - Number(a.total_vendas)).slice(0, 3);
+        const localDataRaw = localStorage.getItem("listPerson");
+        const localData: listPersonProps[] = localDataRaw ? JSON.parse(localDataRaw) : [];
 
-        setListPerson(personList);
-        setFirstPlaces(sortedFirstPlaces);
-        prevListPersonSize.current = personList.length;
+        const dataChanged = JSON.stringify(localData) !== JSON.stringify(data);
+
+        if (dataChanged) {
+          localStorage.setItem("listPerson", JSON.stringify(data));
+          setListPerson(data);
+          setFirstPlaces(sortedFirstPlaces);
+          prevListPersonSize.current = data.length;
+          console.log("Dados atualizados da API.");
+        } else {
+          setListPerson(localData);
+          setFirstPlaces(sortedFirstPlaces); // mantém sincronizado
+          prevListPersonSize.current = localData.length;
+          console.log("Dados não mudaram.");
+        }
       } catch (error) {
-        console.error("Erro ao carregar dados do localStorage:", error);
+        console.error("Erro ao carregar dados da API:", error);
       }
     };
 
@@ -93,74 +109,73 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     window.addEventListener("storage", handleStorageChange);
 
+    // Atualiza a cada 30 minutos
+    const intervalId = setInterval(() => {
+      console.log("Atualizando via intervalo de 30 minutos...");
+      loadLocalStorageData();
+    }, 30 * 60 * 1000); // 30 min
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      clearInterval(intervalId);
     };
   }, []);
 
-
   useEffect(() => {
     const newFirstPlaces = [...ListPerson]
-      .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas)) // Ordena por vendas
+      .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas))
       .slice(0, 3);
 
-    // Atualiza o estado uma única vez antes das verificações
-    if (JSON.stringify(firstPlaces) !== JSON.stringify(newFirstPlaces)) {
-      setFirstPlaces(newFirstPlaces);
-    }
+    // Detecta qual posição mudou
+    const changedIndex = newFirstPlaces.findIndex(
+      (item, index) => item.id_vendedor !== firstPlaces[index]?.id_vendedor
+    );
 
-    // Primeiro Lugar
-    if (firstPlaces[0]?.id_vendedor !== newFirstPlaces[0]?.id_vendedor) {
-      const audioPodio = new Audio("music/music10.wav");
-      setShowAnimation({ state: true, typePlaces: "first" });
-      localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces))
+    // Se mudou o pódio
+    if (changedIndex !== -1) {
+      const audios = [
+        "music/music10.wav", // 1º lugar
+        "music/music7.wav",  // 2º lugar
+        "music/music8.wav",  // 3º lugar
+      ];
 
-      audioPodio.currentTime = 0;
-      audioPodio.play();
+      const durations = [10000, 10000, 5000];
 
-      setTimeout(() => {
-        setShowAnimation({ state: false, typePlaces: "first" });
-      }, 10000); // A animação dura 10 segundos
-    }
+      const audioPodio = new Audio(audios[changedIndex]);
+      const typePlaces = changedIndex === 0 ? "first" : changedIndex === 1 ? "second" : "third";
 
-    // Segundo Lugar
-    else if (firstPlaces[1]?.id_vendedor !== newFirstPlaces[1]?.id_vendedor) {
-      const audioPodio = new Audio("music/music7.wav");
-      setShowAnimation({ state: true, typePlaces: "second" });
-      localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces))
+      setShowAnimation({ state: true, typePlaces });
+      localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces));
 
       audioPodio.currentTime = 0;
       audioPodio.play();
 
       setTimeout(() => {
-        setShowAnimation({ state: false, typePlaces: "second" });
-      }, 10000); // A animação dura 10 segundos
+        setShowAnimation({ state: false, typePlaces });
+      }, durations[changedIndex]);
+
+      console.log(`Mudança detectada no ${typePlaces} lugar`);
     }
 
-    // Terceiro Lugar
-    else if (firstPlaces[2]?.id_vendedor !== newFirstPlaces[2]?.id_vendedor) {
-      const audioPodio = new Audio("music/music8.wav");
-      setShowAnimation({ state: true, typePlaces: "third" });
-      localStorage.setItem("firstPlaces", JSON.stringify(newFirstPlaces))
-
-      audioPodio.currentTime = 0;
-      audioPodio.play();
-
-      setTimeout(() => {
-        setShowAnimation({ state: false, typePlaces: "third" });
-      }, 5000); // A animação dura 5 segundos
-    }
-
-    // Se o tamanho da lista aumentou, toca a música
+    // Se aumentou o tamanho da lista
     else if (ListPerson.length > prevListPersonSize.current) {
-      prevListPersonSize.current = ListPerson.length; // Atualiza a referência do tamanho anterior
+      prevListPersonSize.current = ListPerson.length;
+
       if (audio && firstPlaces[0]?.id_vendedor === newFirstPlaces[0]?.id_vendedor) {
         audio.currentTime = 0;
         audio.play();
+
+        console.log("Novo vendedor adicionado — som tocado.");
       }
     }
 
-  }, [ListPerson, firstPlaces]); // Dispara quando ListPerson muda
+    // Atualiza firstPlaces sempre no final
+    if (JSON.stringify(firstPlaces) !== JSON.stringify(newFirstPlaces)) {
+      setFirstPlaces(newFirstPlaces);
+    }
+  }, [ListPerson, firstPlaces]);
+
+
 
 
   const addMusic = (music: string) => {

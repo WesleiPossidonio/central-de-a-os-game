@@ -16,6 +16,7 @@ import ImageshieldThree from '@/assets/ESCUDO03.png'
 import BgList from '../../assets/BG 02.png'
 
 import { useUser } from "@/hooks/useUser";
+import { UserCircle } from "lucide-react";
 
 export const Hero = () => {
   const { ListPerson, showAnimation, firstPlaces } = useUser()
@@ -69,12 +70,15 @@ export const Hero = () => {
       </AnimatePresence>
 
       {/* Pódio */}
-      <div className="w-full xl:w-[55%] min-h-[18rem] md:min-h-[35rem] bg-[#1f1e2b] rounded-3xl flex justify-center items-center gap-6 sm:gap-8 relative bg-cover bg-center py-8 sm:py-0" style={{ backgroundImage: `url(${BgList})` }}>
+      <div className="w-full xl:w-[55%] min-h-[18rem] md:min-h-[44rem] bg-[#1f1e2b] rounded-3xl flex justify-center items-center gap-6 sm:gap-8 relative bg-cover bg-center py-8 sm:py-0" style={{ backgroundImage: `url(${BgList})` }}>
         {/* 2º Lugar */}
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-20 h-32 sm:w-24 sm:h-40 xl:w-40 xl:h-64 bg-center bg-cover animate-floatSecound flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${ImageshieldTwo})` }}>
-            <img src={firstPlaces[1]?.urlImage} className="octagon w-12 h-12 sm:w-16 sm:h-16 xl:w-28 xl:h-28 mx-auto mt-2" />
+            {
+              firstPlaces[1]?.urlImage ? <img src={firstPlaces[1]?.urlImage} className="octagon w-12 h-12 sm:w-16 sm:h-16 xl:w-28 xl:h-28 mx-auto mt-2" /> : <UserCircle className="octagon w-12 h-12 sm:w-16 sm:h-16 mx-auto mt-2 text-white" />
+            }
+
             <p className="text-white text-xs text-[0.75rem] xl:text-xl text-center font-semibold mt-2">{firstPlaces[1]?.vendedor}</p>
           </div>
           <img src={PodionTwo} className="w-20 xl:w-40 mt-[-0.5rem]" />
@@ -84,7 +88,9 @@ export const Hero = () => {
         <div className="relative z-30 flex flex-col items-center">
           <div className="w-25.5 h-40 sm:w-28 sm:h-48 xl:w-48 xl:h-76 bg-center bg-cover animate-float flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${ImageshieldOne})` }}>
-            <img src={firstPlaces[0]?.urlImage} className="octagon w-15 h-15 sm:w-20 sm:h-20 xl:w-32 xl:h-32 mx-auto mt-2" />
+            {
+              firstPlaces[0]?.urlImage ? <img src={firstPlaces[0]?.urlImage} className="octagon w-15 h-15 sm:w-20 sm:h-20 xl:w-32 xl:h-32 mx-auto mt-2" /> : <UserCircle className="octagon w-12 h-12 sm:w-16 sm:h-16 mx-auto mt-2 text-white" />
+            }
             <p className="text-white text-[0.75rem] sm:text-base xl:text-2xl text-center font-bold mt-2">{firstPlaces[0]?.vendedor}</p>
           </div>
           <img src={PodionOne} className="w-24 xl:w-52 mt-[-0.5rem]" />
@@ -94,7 +100,9 @@ export const Hero = () => {
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-20 h-32 sm:w-24 sm:h-40 xl:w-40 xl:h-64 bg-center bg-cover animate-floatThree flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${ImageshieldThree})` }}>
-            <img src={firstPlaces[2]?.urlImage} className="octagon w-12 h-12 sm:w-16 sm:h-16 xl:w-28 xl:h-28 mx-auto mt-2" />
+            {
+              firstPlaces[2]?.urlImage ? <img src={firstPlaces[2]?.urlImage} className="octagon w-12 h-12 sm:w-16 sm:h-16 xl:w-28 xl:h-28 mx-auto mt-2" /> : <UserCircle className="octagon w-12 h-12 sm:w-16 sm:h-16 mx-auto mt-2 text-white" />
+            }
             <p className="text-white text-xs text-[0.75rem] xl:text-xl text-center font-semibold mt-2">{firstPlaces[2]?.vendedor}</p>
           </div>
           <img src={PodionThree} className="w-20 xl:w-40 mt-[-0.5rem]" />
@@ -102,7 +110,7 @@ export const Hero = () => {
       </div>
 
       {/* Lista de Pessoas */}
-      <div className="w-full xl:w-[45%] min-h-[28rem] md:min-h-[35rem] p-4 sm:p-5 xl:p-9 bg-[#1f1e2b] grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 xl:gap-7 items-center rounded-4xl bg-cover bg-center" style={{ backgroundImage: `url(${BgList})` }}>
+      <div className="w-full xl:w-[45%] min-h-[28rem] md:min-h-[44rem] p-4 sm:p-5 xl:p-9 bg-[#1f1e2b] grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 xl:gap-7 items-center rounded-4xl bg-cover bg-center" style={{ backgroundImage: `url(${BgList})` }}>
         <AnimatePresence>
           {ListPerson
             .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas))
@@ -127,14 +135,14 @@ export const Hero = () => {
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1.2 }}
                         transition={{ duration: 0.5, repeat: 2, repeatType: "reverse" }}
-                        className="w-7 sm:w-9 xl:w-20"
+                        className="w-7 h-10 sm:w-9 xl:w-10"
                       />
                       <div className="flex flex-col items-start justify-center">
                         <p className="text-base sm:text-xl xl:text-2xl text-neutral-200 font-semibold">{list.vendedor}</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center gap-3 sm:gap-4">
+                    <div className="flex items-center justify-center gap-3 sm:gap-4 h-10">
                       <span className="text-white text-base sm:text-lg xl:text-2xl font-semibold">{index + 1}</span>
                       <div className="flex flex-col items-start justify-center">
                         <p className="text-base sm:text-xl xl:text-xl text-neutral-200 font-semibold">{list.vendedor}</p>
