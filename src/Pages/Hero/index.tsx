@@ -82,8 +82,8 @@ export const Hero = () => {
               src={imgSrc}
               onError={() => setImgSrc(Avatar)}
               className={`octagon ${imgSrc === Avatar
-                ? 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
-                : 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                ? 'w-11 h-12 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                : 'w-11 h-12 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
                 } mx-auto mt-2`}
               alt="Imagem"
             />
@@ -100,8 +100,8 @@ export const Hero = () => {
               src={imgSrc}
               onError={() => setImgSrc(Avatar)}
               className={`octagon ${imgSrc === Avatar
-                ? 'w-15 h-15 sm:w-20 sm:h-20 xl:w-28 xl:h-30'
-                : 'w-15 h-15 sm:w-20 sm:h-20 xl:w-28 xl:h-30'
+                ? 'w-12 h-13 sm:w-20 sm:h-20 xl:w-28 xl:h-30'
+                : 'w-12 h-13 sm:w-20 sm:h-20 xl:w-28 xl:h-30'
                 } mx-auto mt-2`}
               alt="Imagem"
             />
@@ -118,8 +118,8 @@ export const Hero = () => {
               src={imgSrc}
               onError={() => setImgSrc(Avatar)}
               className={`octagon ${imgSrc === Avatar
-                ? 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
-                : 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                ? 'w-11 h-12 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                : 'w-11 h-12 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
                 } mx-auto mt-2`}
               alt="Imagem"
             />
