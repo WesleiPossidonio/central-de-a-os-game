@@ -11,15 +11,18 @@ import PodionThree from '@/assets/PODIUM03.png'
 import ImageshieldOne from '@/assets/ESCUDO01.png'
 import ImageshieldTwo from '@/assets/ESCUDO02.png'
 import ImageshieldThree from '@/assets/ESCUDO03.png'
+import Avatar from '@/assets/Avatar.svg'
 
 
 import BgList from '../../assets/BG 02.png'
 
 import { useUser } from "@/hooks/useUser";
-import { UserCircle } from "lucide-react";
+import { useState } from "react";
 
 export const Hero = () => {
+
   const { ListPerson, showAnimation, firstPlaces } = useUser()
+  const [imgSrc, setImgSrc] = useState(firstPlaces[0]?.urlImage || Avatar);
 
   return (
     <section className="w-full h-full flex flex-col xl:flex-row justify-center items-start gap-8  md:px-12 2xl:px-32">
@@ -75,10 +78,15 @@ export const Hero = () => {
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-20 h-32 sm:w-24 sm:h-40 xl:w-40 xl:h-64 bg-center bg-cover animate-floatSecound flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${ImageshieldTwo})` }}>
-            {
-              firstPlaces[1]?.urlImage ? <img src={firstPlaces[1]?.urlImage} className="octagon w-12 h-12 sm:w-16 sm:h-16 xl:w-28 xl:h-28 mx-auto mt-2" /> : <UserCircle className="octagon w-12 h-12 sm:w-16 sm:h-16 mx-auto mt-2 text-white" />
-            }
-
+            <img
+              src={imgSrc}
+              onError={() => setImgSrc(Avatar)}
+              className={`octagon ${imgSrc === Avatar
+                ? 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                : 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                } mx-auto mt-2`}
+              alt="Imagem"
+            />
             <p className="text-white text-xs text-[0.75rem] xl:text-xl text-center font-semibold mt-2">{firstPlaces[1]?.vendedor}</p>
           </div>
           <img src={PodionTwo} className="w-20 xl:w-40 mt-[-0.5rem]" />
@@ -88,9 +96,15 @@ export const Hero = () => {
         <div className="relative z-30 flex flex-col items-center">
           <div className="w-25.5 h-40 sm:w-28 sm:h-48 xl:w-48 xl:h-76 bg-center bg-cover animate-float flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${ImageshieldOne})` }}>
-            {
-              firstPlaces[0]?.urlImage ? <img src={firstPlaces[0]?.urlImage} className="octagon w-15 h-15 sm:w-20 sm:h-20 xl:w-32 xl:h-32 mx-auto mt-2" /> : <UserCircle className="octagon w-12 h-12 sm:w-16 sm:h-16 mx-auto mt-2 text-white" />
-            }
+            <img
+              src={imgSrc}
+              onError={() => setImgSrc(Avatar)}
+              className={`octagon ${imgSrc === Avatar
+                ? 'w-15 h-15 sm:w-20 sm:h-20 xl:w-28 xl:h-30'
+                : 'w-15 h-15 sm:w-20 sm:h-20 xl:w-28 xl:h-30'
+                } mx-auto mt-2`}
+              alt="Imagem"
+            />
             <p className="text-white text-[0.75rem] sm:text-base xl:text-2xl text-center font-bold mt-2">{firstPlaces[0]?.vendedor}</p>
           </div>
           <img src={PodionOne} className="w-24 xl:w-52 mt-[-0.5rem]" />
@@ -100,9 +114,15 @@ export const Hero = () => {
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-20 h-32 sm:w-24 sm:h-40 xl:w-40 xl:h-64 bg-center bg-cover animate-floatThree flex flex-col items-center justify-center"
             style={{ backgroundImage: `url(${ImageshieldThree})` }}>
-            {
-              firstPlaces[2]?.urlImage ? <img src={firstPlaces[2]?.urlImage} className="octagon w-12 h-12 sm:w-16 sm:h-16 xl:w-28 xl:h-28 mx-auto mt-2" /> : <UserCircle className="octagon w-12 h-12 sm:w-16 sm:h-16 mx-auto mt-2 text-white" />
-            }
+            <img
+              src={imgSrc}
+              onError={() => setImgSrc(Avatar)}
+              className={`octagon ${imgSrc === Avatar
+                ? 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                : 'w-15 h-15 sm:w-20 sm:h-20 xl:w-26 xl:h-28'
+                } mx-auto mt-2`}
+              alt="Imagem"
+            />
             <p className="text-white text-xs text-[0.75rem] xl:text-xl text-center font-semibold mt-2">{firstPlaces[2]?.vendedor}</p>
           </div>
           <img src={PodionThree} className="w-20 xl:w-40 mt-[-0.5rem]" />

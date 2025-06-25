@@ -73,6 +73,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         const response = await axios.get(linkApi);
         const data: listPersonProps[] = response.data;
 
+        const newData = data.map((item) => ({
+          ...item,
+          urlImage: `https://criardash.com/central/perfil/${item.id_vendedor}.jpg`,
+        }));
+
+        console.log(newData)
+
         const sortedFirstPlaces = data
           .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas))
           .slice(0, 3);
@@ -80,13 +87,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         const localDataRaw = localStorage.getItem("listPerson");
         const localData: listPersonProps[] = localDataRaw ? JSON.parse(localDataRaw) : [];
 
-        const dataChanged = JSON.stringify(localData) !== JSON.stringify(data);
+        const dataChanged = JSON.stringify(localData) !== JSON.stringify(newData);
 
         if (dataChanged) {
-          localStorage.setItem("listPerson", JSON.stringify(data));
-          setListPerson(data);
+          localStorage.setItem("listPerson", JSON.stringify(newData));
+          setListPerson(newData);
           setFirstPlaces(sortedFirstPlaces);
-          prevListPersonSize.current = data.length;
+          prevListPersonSize.current = newData.length;
           console.log("Dados atualizados da API.");
         } else {
           setListPerson(localData);
@@ -174,9 +181,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       setFirstPlaces(newFirstPlaces);
     }
   }, [ListPerson, firstPlaces]);
-
-
-
 
   const addMusic = (music: string) => {
     setSelectedMusic(music);
