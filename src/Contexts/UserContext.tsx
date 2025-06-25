@@ -62,7 +62,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const prevListPersonSize = useRef(0);
 
   const linkApi = 'https://criardash.com/api/ranking.php?token=sDUEqMJPPV2kVh9Rof6CqhdG'
-
   useEffect(() => {
     const loadLocalStorageData = async () => {
       const savedMusic = localStorage.getItem("selectedMusic") || "/music/music6.wav";
@@ -77,8 +76,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
           ...item,
           urlImage: `https://criardash.com/central/perfil/${item.id_vendedor}.jpg`,
         }));
-
-        console.log(newData)
 
         const sortedFirstPlaces = data
           .sort((a, b) => Number(b.total_vendas) - Number(a.total_vendas))
@@ -97,7 +94,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
           console.log("Dados atualizados da API.");
         } else {
           setListPerson(localData);
-          setFirstPlaces(sortedFirstPlaces); // mantém sincronizado
+          setFirstPlaces(sortedFirstPlaces);
           prevListPersonSize.current = localData.length;
           console.log("Dados não mudaram.");
         }
@@ -106,7 +103,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       }
     };
 
-    loadLocalStorageData();
+    loadLocalStorageData(); // chama ao montar
 
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === "listPerson" || event.key === "firstPlaces") {
@@ -120,13 +117,25 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const intervalId = setInterval(() => {
       console.log("Atualizando via intervalo de 30 minutos...");
       loadLocalStorageData();
-    }, 30 * 60 * 1000); // 30 min
+    }, 30 * 60 * 1000);
+
+    // Atualiza ao voltar para a aba
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        console.log("Atualizando ao voltar para a aba...");
+        loadLocalStorageData();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
 
   useEffect(() => {
     const newFirstPlaces = [...ListPerson]
